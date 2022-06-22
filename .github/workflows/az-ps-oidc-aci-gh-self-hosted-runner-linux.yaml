@@ -86,8 +86,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-    # Checkout the Repo
-    - uses: actions/checkout@v3
+      # Checkout the Repo
+      - uses: actions/checkout@v3
     
     # Login to Azure with PS with Federated with Github
       - name: 'Az PS Login via OIDC'
