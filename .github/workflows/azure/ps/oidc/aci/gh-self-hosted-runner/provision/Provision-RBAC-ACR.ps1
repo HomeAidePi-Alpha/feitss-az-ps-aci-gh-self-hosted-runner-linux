@@ -3,7 +3,7 @@
 
 # Setup Variables. (provide your ACR name)
 $appName="GitHub-ACI-Deploy"
-$acrName="pocacrregistry"
+$acrName="HomeaidePi"
 $region = "eastus2"
 
 # Create AAD App and Service Principal and assign to RBAC Role to push and pull images from ACR

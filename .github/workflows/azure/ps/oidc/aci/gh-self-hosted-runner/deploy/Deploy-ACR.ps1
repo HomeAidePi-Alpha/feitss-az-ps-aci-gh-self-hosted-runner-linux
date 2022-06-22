@@ -4,7 +4,7 @@
 # Setup Variables.
 $resourceGroupName = "POC-Azure-Container-Registry"
 $region = "eastus2"
-$acrName = "pocacrregistry"
+$acrName = "HomeaidePi"
 
 # Create a resource resourceGroupName
 az group create --name "$resourceGroupName" --location "$region"
