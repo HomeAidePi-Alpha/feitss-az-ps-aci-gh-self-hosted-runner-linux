@@ -1,4 +1,5 @@
 name: Microsoft Azure PS - OIDC ACI GH self hosted runner linux
+
 on:
   workflow_dispatch:
     inputs: 
@@ -18,13 +19,13 @@ on:
         description: 'App Name'
         required: true
         default: alpha-app
-env:
-  RUNNER_VERSION: 2.293.0
-  ACI_RESOURCE_GROUP: "POC-ACI-GitHub-Runners-RG"
-  ACI_NAME: "gh-runner-linux-01"
-  DNS_NAME_LABEL: "gh-lin-01"
-  GH_OWNER: "HomeAidePi-Alpha"
-  GH_REPOSITORY: "feitss-az-ps-aci-gh-self-hosted-runner-linux" #TODO Change here to deploy self hosted runner ACI to another repo.
+  env:
+    RUNNER_VERSION: 2.293.0
+    ACI_RESOURCE_GROUP: "POC-ACI-GitHub-Runners-RG"
+    ACI_NAME: "gh-runner-linux-01"
+    DNS_NAME_LABEL: "gh-lin-01"
+    GH_OWNER: "HomeAidePi-Alpha"
+    GH_REPOSITORY: "feitss-az-ps-aci-gh-self-hosted-runner-linux" #TODO Change here to deploy self hosted runner ACI to another repo.
 
 permissions:
   contents: 'read'
