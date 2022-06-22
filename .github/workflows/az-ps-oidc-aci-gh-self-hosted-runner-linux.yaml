@@ -1,5 +1,4 @@
 name: Microsoft Azure PS - OIDC ACI GH self hosted runner linux
-
 on:
   workflow_dispatch:
     inputs: 
@@ -19,7 +18,14 @@ on:
         description: 'App Name'
         required: true
         default: alpha-app
-        
+env:
+  RUNNER_VERSION: 2.293.0
+  ACI_RESOURCE_GROUP: "POC-ACI-GitHub-Runners-RG"
+  ACI_NAME: "gh-runner-linux-01"
+  DNS_NAME_LABEL: "gh-lin-01"
+  GH_OWNER: "HomeAidePi-Alpha"
+  GH_REPOSITORY: "feitss-az-ps-aci-gh-self-hosted-runner-linux" #TODO Change here to deploy self hosted runner ACI to another repo.
+
 permissions:
   contents: 'read'
   id-token: 'write'
@@ -67,23 +73,23 @@ jobs:
     runs-on: [self-hosted]
     needs: [provision]
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
-      - name: Display Terraform Version
-        run: terraform --version
-      - name: Display Azure-CLI Version
-        run: az --version
+    - uses: actions/checkout@v2
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+    - name: Display Terraform Version
+      run: terraform --version
+    - name: Display Azure-CLI Version
+      run: az --version
   
   deploy:
     needs: [provision,test]
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      # Checkout the Repo
-      - uses: actions/checkout@v3
+    # Checkout the Repo
+    - uses: actions/checkout@v3
     
-      # Login to Azure with PS with Federated with Github
+    # Login to Azure with PS with Federated with Github
       - name: 'Az PS Login via OIDC'
         uses: azure/login@v1.4.0
         with:
@@ -96,20 +102,19 @@ jobs:
           ./.github/workflows/azure/ps/oidc/aci/gh-self-hosted-runner/deploy/Deploy-ACI.ps1
         shell: pwsh 
 
-      # Deploy to ACI
-      - name: 'Deploy to Azure Container Instances'
-        uses: 'azure/aci-deploy@v1'
-        with:
-          resource-group: ${{ env.ACI_RESOURCE_GROUP }}
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/az-ps-aci-gh-self-hosted-runner:${{ env.RUNNER_VERSION }}
-          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          registry-username: ${{ secrets.REGISTRY_USERNAME }}
-          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: ${{ env.ACI_NAME }}
-          dns-name-label: ${{ env.DNS_NAME_LABEL }}
-          environment-variables: GH_TOKEN=${{ secrets.PAT_TOKEN }} GH_OWNER=${{ env.GH_OWNER }} GH_REPOSITORY=${{ env.GH_REPOSITORY }}
-          location: 'eastus2'
-          OS-type: 'Linux'
+    - name: 'Deploy to Azure Container Instances'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: ${{ env.ACI_RESOURCE_GROUP }}
+        image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/az-ps-aci-gh-self-hosted-runner:${{ env.RUNNER_VERSION }}
+        registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        name: ${{ env.ACI_NAME }}
+        dns-name-label: ${{ env.DNS_NAME_LABEL }}
+        environment-variables: GH_TOKEN=${{ secrets.PAT_TOKEN }} GH_OWNER=${{ env.GH_OWNER }} GH_REPOSITORY=${{ env.GH_REPOSITORY }}
+        location: 'eastus2'
+        OS-type: 'Linux'
 
   chatops:
     name: Send notifications with Teams
@@ -117,7 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      # Send Chat Ops notification
+          # Send Chat Ops notification
       - name: Send chat ops notification to teams
         uses: dhollerbach/actions.send-message-to-ms-teams@1.0.10
         with:
