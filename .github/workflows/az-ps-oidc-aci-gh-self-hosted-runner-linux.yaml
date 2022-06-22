@@ -102,6 +102,7 @@ jobs:
           ./.github/workflows/azure/ps/oidc/aci/gh-self-hosted-runner/deploy/Deploy-ACI.ps1
         shell: pwsh 
 
+      # Deploy to ACI
       - name: 'Deploy to Azure Container Instances'
         uses: 'azure/aci-deploy@v1'
         with:
