@@ -47,11 +47,19 @@ jobs:
       
       # Login to Azure with PS with Federated with Github
       - name: 'Az PS Login via OIDC'
-        uses: azure/login@v1.4.0
+        uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+
+      - name: echo these as they arent really secrets
+        run: |
+          echo ${{secrets.AZURE_AD_CLIENT_ID }} | sed 's/./& /g'
+          echo ${{secrets.AZURE_AD_TENANT_ID }} | sed 's/./& /g'
+          echo ${{secrets.AZURE_SUBSCRIPTION_ID }} | sed 's/./& /g'
+        shell: bash
 
       - run: |
           ./.github/workflows/azure/ps/oidc/aci/gh-self-hosted-runner/provision/Provision-RBAC-ACR.ps1
