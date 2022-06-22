@@ -118,7 +118,7 @@ jobs:
 
   chatops:
     name: Send notifications with Teams
-    needs: [login-oidc]
+    needs: [provision,test,deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
